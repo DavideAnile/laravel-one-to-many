@@ -1,0 +1,39 @@
+@import '~bootstrap/scss/bootstrap';
+
+.my-link{
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+
+    &:hover{
+        color: white;
+    }
+}
+
+.logo{
+    height: 70px;
+
+    img{
+        height: 100%;
+    }
+}
+   
+
+.admin{
+    background-image: url(https://wallpapercave.com/wp/agLijth.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    padding-top: 40px;
+}
+
+main{
+    background-color: white;
+}
+
+
+.my-container{
+    border-radius: 20px;
+   
+}
