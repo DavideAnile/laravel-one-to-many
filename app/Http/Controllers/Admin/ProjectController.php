@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -29,7 +31,9 @@ class ProjectController extends Controller
      */
     public function create()
     {
-       return view('admin/projects/create');
+        $types = Type::all();
+
+       return view('admin/projects/create' , compact('types'));
     }
 
     /**
@@ -42,7 +46,7 @@ class ProjectController extends Controller
     {
         $formData = $request->all();
 
-        
+        $this->validation($formData);
 
         $newProject = new Project();
 
@@ -51,6 +55,7 @@ class ProjectController extends Controller
         $newProject->github_link = $formData['github_Link'];
         $newProject->created_by = $formData['created_by'];
         $newProject->slug = Str::slug($formData['project_name'] , '-');
+        $newProject->type_id = $formData['type_id'];
 
         $newProject->save();
 
@@ -76,8 +81,10 @@ class ProjectController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Project $project)
+
     {
-        return view('admin/projects/edit', compact('project'));
+        $types = Type::all();
+        return view('admin/projects/edit', compact('project', 'types'));
     }
 
     /**
@@ -90,6 +97,8 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $formData = $request->all();
+
+        $this->validation($formData);
 
         $project->update($formData);
 
@@ -109,5 +118,29 @@ class ProjectController extends Controller
         $project->delete();
 
         return redirect()->route('admin.projects.index');
+    }
+
+    private function validation($formData){
+        $validator = Validator::make($formData , [
+            'project_name' => 'required|max:200|min:5',
+            'project_description' => 'required|min:5',
+            'github_Link' => 'required',
+            'created_by' => 'required',
+            'type_id' => 'nullable|exists:types,id'
+        ] , [
+            
+            'project_name.required' => 'Devi inserire un titolo',
+            'project_name.max' => 'Il titolo può contenere un massimo di :max caratteri',
+            'project_name.min' => 'il titolo deve contenere un minimo di :min caratteri',
+            'project_description.required' => 'Inserisci una descrizione!',
+            'project_description.min' => 'la descrizione deve contenere un minimo di :min caratteri',
+            'github_Link.required' => 'Inserisci un link Github!',
+            'created_by.required' => 'Inserisci il nome del creatore del progetto!',
+            'type_id.exists' =>'Categoria non trovata!'
+
+
+        ])->validate();
+
+        
     }
 }

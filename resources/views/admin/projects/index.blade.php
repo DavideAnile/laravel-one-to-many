@@ -14,7 +14,7 @@
                   
                   <th scope="col">Nome Progetto</th>
                   <th scope="col">Creato da </th>
-                  
+                  <th scope="col">Tipo Progetto</th>
                   <th scope="col">Mostra dettagli</th>
               </tr>
           </thead>
@@ -25,6 +25,7 @@
           <td>{{$singleProject->project_name}}</td>
           <td>{{$singleProject->created_by}}</td>
           <td><a href="{{route('admin.projects.show', $singleProject->slug)}}"><i class="fa-solid fa-link"></i></a></td>
+          <td>{{$singleProject->type->name ?? 'Undefined'}}</td>
         </tr>
         
         @endforeach
